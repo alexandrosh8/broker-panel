@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
 import { useAuthStore } from './stores/authStore'
 import { useThemeStore } from './stores/themeStore'
@@ -12,8 +12,14 @@ import Settings from './pages/Settings'
 import { cn } from './utils/cn'
 
 function App() {
-  const { isAuthenticated } = useAuthStore()
-  const { theme } = useThemeStore()
+  const { isAuthenticated, checkAuth } = useAuthStore()
+  const { theme, initializeTheme } = useThemeStore()
+
+  useEffect(() => {
+    // Initialize theme and check authentication on app startup
+    initializeTheme()
+    checkAuth()
+  }, [initializeTheme, checkAuth])
 
   return (
     <div className={cn("min-h-screen transition-colors duration-300", theme)}>
