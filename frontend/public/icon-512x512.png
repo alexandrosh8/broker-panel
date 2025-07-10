@@ -1,0 +1,41 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" fill="#3b82f6" rx="64"/>
+  
+  <!-- Calculator Icon -->
+  <rect x="128" y="128" width="256" height="256" fill="white" rx="20"/>
+  
+  <!-- Screen -->
+  <rect x="148" y="148" width="216" height="54" fill="#1e293b" rx="8"/>
+  
+  <!-- Buttons Row 1 -->
+  <rect x="160" y="224" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="214" y="224" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="268" y="224" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="322" y="224" width="44" height="32" fill="#fbbf24" rx="4"/>
+  
+  <!-- Buttons Row 2 -->
+  <rect x="160" y="266" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="214" y="266" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="268" y="266" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="322" y="266" width="44" height="32" fill="#fbbf24" rx="4"/>
+  
+  <!-- Buttons Row 3 -->
+  <rect x="160" y="308" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="214" y="308" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="268" y="308" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="322" y="308" width="44" height="32" fill="#fbbf24" rx="4"/>
+  
+  <!-- Buttons Row 4 -->
+  <rect x="160" y="350" width="44" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="214" y="350" width="98" height="32" fill="#e2e8f0" rx="4"/>
+  <rect x="322" y="350" width="44" height="32" fill="#10b981" rx="4"/>
+  
+  <!-- Sports elements (circles representing balls) -->
+  <circle cx="86" cy="86" r="20" fill="white" opacity="0.8"/>
+  <circle cx="426" cy="426" r="20" fill="white" opacity="0.8"/>
+  
+  <!-- Dollar sign for betting -->
+  <text x="86" y="96" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b" text-anchor="middle">$</text>
+  <text x="426" y="436" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b" text-anchor="middle">%</text>
+</svg>
