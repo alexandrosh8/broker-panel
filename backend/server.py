@@ -336,6 +336,111 @@ async def delete_broker_account(account_id: str, current_user: User = Depends(ge
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow()}
 
+# WebSocket endpoint for real-time updates
+@app.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: str):
+    await manager.connect(websocket, user_id)
+    try:
+        # Send welcome message
+        await manager.broadcast_to_user({
+            "type": "connection",
+            "message": "Connected to real-time updates",
+            "timestamp": datetime.utcnow().isoformat()
+        }, user_id)
+        
+        while True:
+            # Keep connection alive and listen for messages
+            data = await websocket.receive_text()
+            message_data = json.loads(data)
+            
+            if message_data.get("type") == "ping":
+                await manager.broadcast_to_user({
+                    "type": "pong",
+                    "timestamp": datetime.utcnow().isoformat()
+                }, user_id)
+                
+    except WebSocketDisconnect:
+        manager.disconnect(websocket, user_id)
+
+# Enhanced save endpoints with real-time updates
+@api_router.post("/single/data")
+async def save_single_data(data: SingleCalculatorData, current_user: User = Depends(get_current_user)):
+    data.user_id = current_user.id
+    data.updated_at = datetime.utcnow()
+    
+    # Check if record exists
+    existing = await db.single_calculator.find_one({"id": data.id, "user_id": current_user.id})
+    if existing:
+        await db.single_calculator.update_one(
+            {"id": data.id, "user_id": current_user.id},
+            {"$set": data.dict()}
+        )
+    else:
+        await db.single_calculator.insert_one(data.dict())
+    
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "single",
+        "action": "save",
+        "data": data.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
+    
+    return data
+
+@api_router.post("/pro/data")
+async def save_pro_data(data: ProCalculatorData, current_user: User = Depends(get_current_user)):
+    data.user_id = current_user.id
+    data.updated_at = datetime.utcnow()
+    
+    # Check if record exists
+    existing = await db.pro_calculator.find_one({"id": data.id, "user_id": current_user.id})
+    if existing:
+        await db.pro_calculator.update_one(
+            {"id": data.id, "user_id": current_user.id},
+            {"$set": data.dict()}
+        )
+    else:
+        await db.pro_calculator.insert_one(data.dict())
+    
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "pro",
+        "action": "save",
+        "data": data.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
+    
+    return data
+
+@api_router.post("/broker/accounts")
+async def save_broker_account(account: BrokerAccount, current_user: User = Depends(get_current_user)):
+    account.user_id = current_user.id
+    account.updated_at = datetime.utcnow()
+    
+    # Check if record exists
+    existing = await db.broker_accounts.find_one({"id": account.id, "user_id": current_user.id})
+    if existing:
+        await db.broker_accounts.update_one(
+            {"id": account.id, "user_id": current_user.id},
+            {"$set": account.dict()}
+        )
+    else:
+        await db.broker_accounts.insert_one(account.dict())
+    
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "broker",
+        "action": "save",
+        "data": account.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
+    
+    return account
+
 # Legacy status check (keeping for compatibility)
 @api_router.get("/")
 async def root():
