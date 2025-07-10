@@ -194,9 +194,19 @@ export default function ProCalculator() {
               </p>
             </div>
 
-            <Button className="w-full mt-6">
-              Log Strategy
-            </Button>
+            <div className="flex gap-2">
+              <Button className="flex-1">
+                Log Strategy
+              </Button>
+              <Button variant="outline" onClick={handleExportPDF}>
+                <DocumentArrowDownIcon className="h-4 w-4 mr-2" />
+                PDF
+              </Button>
+              <Button variant="outline" onClick={handleExportExcel}>
+                <TableCellsIcon className="h-4 w-4 mr-2" />
+                Excel
+              </Button>
+            </div>
           </CardBody>
         </Card>
       </div>
