@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+// Import the autoTable plugin correctly
+import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 
 export const exportToPDF = (data, title = 'Betting Calculator Results') => {
@@ -15,6 +16,7 @@ export const exportToPDF = (data, title = 'Betting Calculator Results') => {
   
   // Add data based on calculator type
   if (data.type === 'single') {
+    // Use the autoTable method directly on the doc object
     doc.autoTable({
       startY: 40,
       head: [['Field', 'Value']],
