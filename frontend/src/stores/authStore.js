@@ -27,6 +27,9 @@ export const useAuthStore = create(
           // Set token for future requests
           api.defaults.headers.common['Authorization'] = `Bearer ${token}`
           
+          // Connect to real-time service
+          realtimeService.connect(user.id)
+          
           return { success: true, user }
         } catch (error) {
           set({ isLoading: false })
