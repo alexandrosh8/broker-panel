@@ -125,15 +125,6 @@ export default function Login() {
                 Sign In
               </Button>
             </form>
-
-            {/* Demo credentials hint */}
-            <div className="mt-6 p-4 bg-neutral-100 dark:bg-neutral-700 rounded-lg">
-              <p className="text-sm text-neutral-600 dark:text-neutral-400 text-center">
-                <strong>Demo credentials:</strong><br />
-                Username: admin<br />
-                Password: password123
-              </p>
-            </div>
           </CardBody>
         </Card>
 
