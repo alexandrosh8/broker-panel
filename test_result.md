@@ -165,6 +165,9 @@ backend:
       - working: true
         agent: "testing"
         comment: "All calculator data models tested and working: Single Calculator CRUD, Pro Calculator CRUD, Broker Accounts CRUD (including GET, POST, PUT, DELETE). User data isolation verified - users can only access their own data."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL BUG FIXED & RE-VERIFIED: Fixed JSON serialization error in WebSocket real-time updates where datetime objects were not JSON serializable. All calculator endpoints now working perfectly: Single Calculator CRUD (create/read test data), Pro Calculator CRUD (create/read test data), Broker Accounts full CRUD (create/read/update/delete operations). User data isolation confirmed - users can only access their own calculator data. Real-time WebSocket updates now functional."
 
 frontend:
   - task: "Authentication Flow"
