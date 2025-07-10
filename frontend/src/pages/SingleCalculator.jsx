@@ -52,6 +52,42 @@ export default function SingleCalculator() {
     })
   }
 
+  const handleExportPDF = () => {
+    const exportData = {
+      type: 'single',
+      odds: formData.odds,
+      betAmount: formData.betAmount,
+      commission: formData.commission,
+      potentialReturn: calculations.potentialReturn,
+      netProfit: calculations.netProfit,
+      roi: parseFloat(formData.betAmount) > 0 ? (calculations.netProfit / parseFloat(formData.betAmount)) * 100 : 0,
+      bookie: formData.bookie,
+      sport: formData.sport,
+      game: formData.game,
+      market: formData.market,
+      date: formData.date,
+    }
+    exportToPDF(exportData, 'Single Calculator Results')
+  }
+
+  const handleExportExcel = () => {
+    const exportData = {
+      type: 'single',
+      odds: formData.odds,
+      betAmount: formData.betAmount,
+      commission: formData.commission,
+      potentialReturn: calculations.potentialReturn,
+      netProfit: calculations.netProfit,
+      roi: parseFloat(formData.betAmount) > 0 ? (calculations.netProfit / parseFloat(formData.betAmount)) * 100 : 0,
+      bookie: formData.bookie,
+      sport: formData.sport,
+      game: formData.game,
+      market: formData.market,
+      date: formData.date,
+    }
+    exportToExcel(exportData, 'Single Calculator Results')
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault()
     // TODO: Save bet to database
