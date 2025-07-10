@@ -208,3 +208,5 @@ agent_communication:
     message: "Starting Phase 1: Backend authentication system implementation. Frontend is ready but backend needs auth endpoints."
   - agent: "main"
     message: "Phase 1 COMPLETE: Authentication system fully implemented with JWT tokens, user models, and CRUD operations for all calculators. Need to test authentication flow end-to-end."
+  - agent: "testing"
+    message: "Backend testing COMPLETE: All 12 authentication and calculator tests passed. Fixed critical user registration bug where hashed_password wasn't being stored. All endpoints working: /auth/login, /auth/register, /auth/me, /auth/logout, calculator CRUD operations, and user data isolation. Backend authentication system is fully functional."
