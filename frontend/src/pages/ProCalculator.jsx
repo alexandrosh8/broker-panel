@@ -27,19 +27,23 @@ export default function ProCalculator() {
     const oddsB = parseFloat(accountData.B.odds) || 0
     const commissionRate = parseFloat(commission) || 0
     const cashback = parseFloat(cashbackRate) || 0
+    const betA = parseFloat(accountData.A.bet) || 0
 
     // Calculate margin
     const margin = oddsA > 0 && oddsB > 0 ? ((1/oddsA + 1/oddsB - 1) * 100) : 0
 
-    // Calculate optimal bets (simplified)
-    const betA = parseFloat(accountData.A.bet) || 0
-    const optimalBetB = betA * (oddsA / (oddsB - cashback/100))
+    // Calculate optimal bet B based on arbitrage formula
+    const optimalBetB = (betA * oddsA) / oddsB
+
+    // Calculate profits considering cashback when account B loses
+    const profitIfAWins = (betA * (oddsA - 1) * (1 - commissionRate/100)) - optimalBetB + (optimalBetB * cashback/100)
+    const profitIfBWins = (optimalBetB * (oddsB - 1)) - betA
 
     return {
       margin,
       optimalBetB,
-      profitIfAWins: betA * (oddsA - 1) * (1 - commissionRate/100) - optimalBetB,
-      profitIfBWins: optimalBetB * (oddsB - 1) - betA,
+      profitIfAWins,
+      profitIfBWins,
     }
   }
 
