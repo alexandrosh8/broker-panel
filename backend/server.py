@@ -258,6 +258,15 @@ async def save_single_data(data: SingleCalculatorData, current_user: User = Depe
     else:
         await db.single_calculator.insert_one(data.dict())
     
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "single",
+        "action": "save",
+        "data": data.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
+    
     return data
 
 # Pro Calculator Routes
@@ -281,6 +290,15 @@ async def save_pro_data(data: ProCalculatorData, current_user: User = Depends(ge
     else:
         await db.pro_calculator.insert_one(data.dict())
     
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "pro",
+        "action": "save",
+        "data": data.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
+    
     return data
 
 # Broker Account Routes
@@ -303,6 +321,15 @@ async def save_broker_account(account: BrokerAccount, current_user: User = Depen
         )
     else:
         await db.broker_accounts.insert_one(account.dict())
+    
+    # Send real-time update
+    await manager.broadcast_to_user({
+        "type": "data_update",
+        "calculator": "broker",
+        "action": "save",
+        "data": account.dict(),
+        "timestamp": datetime.utcnow().isoformat()
+    }, current_user.id)
     
     return account
 
