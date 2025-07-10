@@ -13,7 +13,7 @@ import {
 } from 'chart.js'
 import { Line, Bar, Doughnut } from 'react-chartjs-2'
 import { Card, CardHeader, CardBody, CardTitle } from '../components/ui/Card'
-import { CalendarIcon, ArrowTrendingUpIcon, CurrencyDollarIcon, PercentIcon } from '@heroicons/react/24/outline'
+import { CalendarIcon, ArrowTrendingUpIcon, CurrencyDollarIcon, PercentBadgeIcon } from '@heroicons/react/24/outline'
 import { formatCurrency, formatPercentage } from '../utils/format'
 
 ChartJS.register(
