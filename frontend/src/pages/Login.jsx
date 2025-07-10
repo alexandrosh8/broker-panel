@@ -100,11 +100,12 @@ export default function Login() {
                   value={credentials.password}
                   onChange={handleChange}
                   placeholder="Enter your password"
+                  className="pr-10"
                   required
                 />
                 <button
                   type="button"
-                  className="absolute right-3 top-8 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300"
+                  className="absolute right-3 top-9 text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
