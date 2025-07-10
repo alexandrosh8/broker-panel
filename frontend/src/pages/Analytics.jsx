@@ -249,7 +249,7 @@ export default function Analytics() {
         <Card>
           <CardBody className="flex items-center space-x-4">
             <div className="p-3 bg-secondary-100 dark:bg-secondary-900 rounded-lg">
-              <TrendingUpIcon className="h-8 w-8 text-secondary-600 dark:text-secondary-400" />
+              <ArrowTrendingUpIcon className="h-8 w-8 text-secondary-600 dark:text-secondary-400" />
             </div>
             <div>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">Avg Profit/Bet</p>
