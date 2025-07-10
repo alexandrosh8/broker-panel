@@ -180,13 +180,29 @@ export default function ProCalculator() {
                 {formatCurrency(results.optimalBetB)}
               </p>
             </div>
+            
+            {/* Cashback Tier Display */}
+            <div className="p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+              <p className="text-sm font-medium text-green-600 dark:text-green-400 mb-2">
+                Current Cashback Tier
+              </p>
+              <p className="text-lg font-bold text-green-700 dark:text-green-300">
+                {currentTier.label}
+              </p>
+              <p className="text-xs text-green-600 dark:text-green-400 mt-1">
+                Total B Losses: {formatCurrency(totalBLosses)}
+              </p>
+            </div>
+            
+            {/* Total B Losses Input */}
             <Input
-              label="Cashback Rate (%)"
+              label="Total Account B Losses"
               type="number"
-              step="0.1"
+              step="0.01"
               min="0"
-              value={cashbackRate}
-              onChange={(e) => setCashbackRate(e.target.value)}
+              value={totalBLosses}
+              onChange={(e) => setTotalBLosses(parseFloat(e.target.value) || 0)}
+              placeholder="Enter cumulative B losses"
             />
           </CardBody>
         </Card>
