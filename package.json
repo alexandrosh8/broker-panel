@@ -20,7 +20,8 @@
     "react-hot-toast": "^2.4.1",
     "lucide-react": "^0.294.0",
     "clsx": "^2.0.0",
-    "tailwind-merge": "^2.0.0"
+    "tailwind-merge": "^2.0.0",
+    "@heroicons/react": "^2.0.18"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.0",
