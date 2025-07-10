@@ -11,6 +11,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   WifiIcon,
+  ChartPieIcon,
 } from '@heroicons/react/24/outline'
 import { useAuthStore } from '../stores/authStore'
 import { useThemeStore } from '../stores/themeStore'
@@ -22,6 +23,7 @@ const navigation = [
   { name: 'Single Calculator', href: '/single', icon: CalculatorIcon },
   { name: 'Pro Calculator', href: '/pro', icon: CalculatorIcon },
   { name: 'Broker Accounts', href: '/broker', icon: BuildingOfficeIcon },
+  { name: 'Analytics', href: '/analytics', icon: ChartPieIcon },
   { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
 ]
 
