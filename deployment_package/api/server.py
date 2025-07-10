@@ -259,11 +259,17 @@ async def save_single_data(data: SingleCalculatorData, current_user: User = Depe
         await db.single_calculator.insert_one(data.dict())
     
     # Send real-time update
+    data_dict = data.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in data_dict.items():
+        if isinstance(value, datetime):
+            data_dict[key] = value.isoformat()
+    
     await manager.broadcast_to_user({
         "type": "data_update",
         "calculator": "single",
         "action": "save",
-        "data": data.dict(),
+        "data": data_dict,
         "timestamp": datetime.utcnow().isoformat()
     }, current_user.id)
     
@@ -291,11 +297,17 @@ async def save_pro_data(data: ProCalculatorData, current_user: User = Depends(ge
         await db.pro_calculator.insert_one(data.dict())
     
     # Send real-time update
+    data_dict = data.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in data_dict.items():
+        if isinstance(value, datetime):
+            data_dict[key] = value.isoformat()
+    
     await manager.broadcast_to_user({
         "type": "data_update",
         "calculator": "pro",
         "action": "save",
-        "data": data.dict(),
+        "data": data_dict,
         "timestamp": datetime.utcnow().isoformat()
     }, current_user.id)
     
@@ -323,11 +335,17 @@ async def save_broker_account(account: BrokerAccount, current_user: User = Depen
         await db.broker_accounts.insert_one(account.dict())
     
     # Send real-time update
+    account_dict = account.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in account_dict.items():
+        if isinstance(value, datetime):
+            account_dict[key] = value.isoformat()
+    
     await manager.broadcast_to_user({
         "type": "data_update",
         "calculator": "broker",
         "action": "save",
-        "data": account.dict(),
+        "data": account_dict,
         "timestamp": datetime.utcnow().isoformat()
     }, current_user.id)
     
