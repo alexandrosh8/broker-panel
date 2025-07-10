@@ -259,11 +259,17 @@ async def save_single_data(data: SingleCalculatorData, current_user: User = Depe
         await db.single_calculator.insert_one(data.dict())
     
     # Send real-time update
+    data_dict = data.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in data_dict.items():
+        if isinstance(value, datetime):
+            data_dict[key] = value.isoformat()
+    
     await manager.broadcast_to_user({
         "type": "data_update",
         "calculator": "single",
         "action": "save",
-        "data": data.dict(),
+        "data": data_dict,
         "timestamp": datetime.utcnow().isoformat()
     }, current_user.id)
     
