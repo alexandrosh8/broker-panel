@@ -23,8 +23,6 @@ export default function Activities() {
   
   const stats = getStats()
 
-  const stats = getStats()
-
   // Remove mock data as we're now using real data from the store
 
   const handleExport = (type) => {
