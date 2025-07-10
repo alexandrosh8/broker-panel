@@ -1,132 +1,166 @@
-import { useAppStore } from '../stores/appStore'
-
 class RealtimeService {
   constructor() {
-    this.eventSource = null
+    this.ws = null
+    this.isConnected = false
     this.reconnectAttempts = 0
     this.maxReconnectAttempts = 5
     this.reconnectDelay = 1000
+    this.listeners = new Map()
+    this.userId = null
   }
 
-  connect() {
-    if (this.eventSource) {
+  connect(userId) {
+    if (this.ws) {
       this.disconnect()
     }
 
+    this.userId = userId
+    const wsUrl = `${process.env.REACT_APP_BACKEND_URL.replace('https:', 'wss:').replace('http:', 'ws:')}/ws/${userId}`
+    
     try {
-      this.eventSource = new EventSource('/api/events')
-      
-      this.eventSource.onopen = () => {
-        console.log('Real-time connection established')
-        useAppStore.getState().setConnectionStatus(true)
-        this.reconnectAttempts = 0
-      }
-
-      this.eventSource.onmessage = (event) => {
-        try {
-          const data = JSON.parse(event.data)
-          this.handleMessage(data)
-        } catch (error) {
-          console.error('Error parsing real-time message:', error)
-        }
-      }
-
-      this.eventSource.onerror = () => {
-        console.log('Real-time connection error')
-        useAppStore.getState().setConnectionStatus(false)
-        this.handleReconnect()
-      }
-
+      this.ws = new WebSocket(wsUrl)
+      this.setupEventListeners()
     } catch (error) {
-      console.error('Error establishing real-time connection:', error)
-      useAppStore.getState().setConnectionStatus(false)
+      console.error('WebSocket connection failed:', error)
+      this.scheduleReconnect()
     }
   }
 
-  disconnect() {
-    if (this.eventSource) {
-      this.eventSource.close()
-      this.eventSource = null
+  setupEventListeners() {
+    this.ws.onopen = () => {
+      console.log('WebSocket connected')
+      this.isConnected = true
+      this.reconnectAttempts = 0
+      this.emit('connected')
+    }
+
+    this.ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data)
+        this.handleMessage(data)
+      } catch (error) {
+        console.error('Error parsing WebSocket message:', error)
+      }
+    }
+
+    this.ws.onclose = () => {
+      console.log('WebSocket disconnected')
+      this.isConnected = false
+      this.emit('disconnected')
+      this.scheduleReconnect()
+    }
+
+    this.ws.onerror = (error) => {
+      console.error('WebSocket error:', error)
+      this.emit('error', error)
     }
   }
 
   handleMessage(data) {
-    const { addNotification } = useAppStore.getState()
-
     switch (data.type) {
-      case 'data_updated':
-        addNotification({
-          type: 'info',
-          message: `${data.module} data updated by ${data.user}`,
-          duration: 3000,
-        })
-        // Trigger data refresh in relevant stores
-        this.triggerDataRefresh(data.module)
+      case 'connection':
+        console.log('WebSocket connection confirmed:', data.message)
         break
-
-      case 'user_action':
-        addNotification({
-          type: 'info',
-          message: data.message,
-          duration: 2000,
-        })
+      case 'data_update':
+        this.emit('dataUpdate', data)
         break
-
-      case 'system_notification':
-        addNotification({
-          type: data.level || 'info',
-          message: data.message,
-          duration: 5000,
-        })
+      case 'pong':
+        // Handle ping/pong for keep-alive
         break
-
       default:
-        console.log('Unknown real-time message type:', data.type)
+        console.log('Unknown message type:', data.type)
     }
   }
 
-  triggerDataRefresh(module) {
-    // Emit custom events for data refresh
-    window.dispatchEvent(new CustomEvent(`refresh-${module}`))
+  send(data) {
+    if (this.ws && this.isConnected) {
+      this.ws.send(JSON.stringify(data))
+    }
   }
 
-  handleReconnect() {
+  ping() {
+    this.send({ type: 'ping' })
+  }
+
+  scheduleReconnect() {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++
-      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1)
-      
-      console.log(`Attempting to reconnect in ${delay}ms (attempt ${this.reconnectAttempts})`)
-      
       setTimeout(() => {
-        this.connect()
-      }, delay)
-    } else {
-      console.log('Max reconnection attempts reached')
-      useAppStore.getState().addNotification({
-        type: 'error',
-        message: 'Real-time connection lost. Please refresh the page.',
-        duration: 0, // Persistent notification
+        if (this.userId) {
+          console.log(`Reconnecting... Attempt ${this.reconnectAttempts}`)
+          this.connect(this.userId)
+        }
+      }, this.reconnectDelay * this.reconnectAttempts)
+    }
+  }
+
+  disconnect() {
+    if (this.ws) {
+      this.ws.close()
+      this.ws = null
+      this.isConnected = false
+      this.userId = null
+    }
+  }
+
+  // Event listener management
+  on(event, callback) {
+    if (!this.listeners.has(event)) {
+      this.listeners.set(event, [])
+    }
+    this.listeners.get(event).push(callback)
+  }
+
+  off(event, callback) {
+    if (this.listeners.has(event)) {
+      const callbacks = this.listeners.get(event)
+      const index = callbacks.indexOf(callback)
+      if (index > -1) {
+        callbacks.splice(index, 1)
+      }
+    }
+  }
+
+  emit(event, data) {
+    if (this.listeners.has(event)) {
+      this.listeners.get(event).forEach(callback => {
+        try {
+          callback(data)
+        } catch (error) {
+          console.error('Error in event listener:', error)
+        }
       })
     }
   }
 
-  sendMessage(type, data) {
-    // For sending messages to server via POST requests
-    fetch('/api/events', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ type, data }),
-    }).catch(error => {
-      console.error('Error sending real-time message:', error)
-    })
+  // Start keep-alive ping
+  startKeepAlive() {
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval)
+    }
+    
+    this.keepAliveInterval = setInterval(() => {
+      if (this.isConnected) {
+        this.ping()
+      }
+    }, 30000) // Ping every 30 seconds
+  }
+
+  stopKeepAlive() {
+    if (this.keepAliveInterval) {
+      clearInterval(this.keepAliveInterval)
+      this.keepAliveInterval = null
+    }
   }
 }
 
 export const realtimeService = new RealtimeService()
 
-// Auto-connect when module is imported
-if (typeof window !== 'undefined') {
-  realtimeService.connect()
-}
+// Auto-start keep-alive when connected
+realtimeService.on('connected', () => {
+  realtimeService.startKeepAlive()
+})
+
+realtimeService.on('disconnected', () => {
+  realtimeService.stopKeepAlive()
+})
