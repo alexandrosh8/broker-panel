@@ -88,6 +88,72 @@ export default function BrokerAccounts() {
     }
     localStorage.setItem('brokerAccountsData_v3', JSON.stringify(dataToSave))
   }, [accounts, costs, proxies, floatAccounts, floatBalances, floatOwners])
+
+  // Helper functions
+  const formatCurrency = (value) => {
+    const num = parseFloat(value)
+    return isNaN(num) ? "$0.00" : `$${num.toFixed(2)}`
+  }
+
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A"
+    try {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short', 
+        day: 'numeric'
+      })
+    } catch (e) {
+      return dateString
+    }
+  }
+
+  // Account handlers
+  const handleAddAccount = () => {
+    setEditingItem(null)
+    setShowAccountModal(true)
+  }
+
+  const handleEditAccount = (account) => {
+    setEditingItem(account)
+    setShowAccountModal(true)
+  }
+
+  const handleSaveAccount = (accountData) => {
+    if (editingItem) {
+      // Update existing account
+      setAccounts(prev => prev.map(acc => 
+        acc.id === editingItem.id ? { ...editingItem, ...accountData } : acc
+      ))
+      addNotification({ message: 'Account updated successfully', type: 'success' })
+    } else {
+      // Add new account
+      const newAccount = {
+        ...accountData,
+        id: Date.now().toString() + Math.random().toString(16).slice(2),
+        createdAt: new Date().toISOString(),
+        lastModified: new Date().toISOString()
+      }
+      setAccounts(prev => [newAccount, ...prev])
+      addNotification({ message: 'Account added successfully', type: 'success' })
+    }
+    setShowAccountModal(false)
+    setEditingItem(null)
+  }
+
+  const handleDeleteAccount = (id) => {
+    if (window.confirm('Are you sure you want to delete this account?')) {
+      setAccounts(prev => prev.filter(acc => acc.id !== id))
+      addNotification({ message: 'Account deleted successfully', type: 'success' })
+    }
+  }
+
+  const handleToggleAccountStatus = (id) => {
+    setAccounts(prev => prev.map(acc => 
+      acc.id === id ? { ...acc, isActive: !acc.isActive } : acc
+    ))
+  }
     type: 'What I received',
     user: 'Leo',
     amount: 180,
