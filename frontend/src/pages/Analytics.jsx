@@ -277,7 +277,7 @@ export default function Analytics() {
         <Card>
           <CardBody className="flex items-center space-x-4">
             <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
-              <PercentIcon className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
+              <PercentBadgeIcon className="h-8 w-8 text-yellow-600 dark:text-yellow-400" />
             </div>
             <div>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">Best Bookie</p>
