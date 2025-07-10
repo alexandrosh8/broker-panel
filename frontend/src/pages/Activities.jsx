@@ -23,94 +23,54 @@ export default function Activities() {
   
   const stats = getStats()
 
-  // Mock data - replace with real API calls
-  const mockSingleHistory = [
-    {
-      id: 1,
-      date: '2024-01-15',
-      odds: 2.10,
-      betAmount: 100,
-      commission: 2.5,
-      potentialReturn: 210,
-      netProfit: 107.5,
-      roi: 7.5,
-      bookie: 'Bet365',
-      sport: 'Football',
-      game: 'Arsenal vs Chelsea',
-      market: 'Match Winner'
-    },
-    {
-      id: 2,
-      date: '2024-01-14',
-      odds: 1.85,
-      betAmount: 200,
-      commission: 2.0,
-      potentialReturn: 370,
-      netProfit: 166.6,
-      roi: 83.3,
-      bookie: 'William Hill',
-      sport: 'Basketball',
-      game: 'Lakers vs Warriors',
-      market: 'Total Points Over'
-    }
-  ]
+  const stats = getStats()
 
-  const mockProHistory = [
-    {
-      id: 1,
-      date: '2024-01-15',
-      accountA: { odds: 1.94, bet: 200 },
-      accountB: { odds: 2.10, bet: 185 },
-      commission: 2.5,
-      cashbackRate: 25,
-      margin: -3.2,
-      profitIfAWins: 15.5,
-      profitIfBWins: 18.2,
-      optimalBetB: 185
-    },
-    {
-      id: 2,
-      date: '2024-01-14',
-      accountA: { odds: 2.05, bet: 150 },
-      accountB: { odds: 1.95, bet: 158 },
-      commission: 2.0,
-      cashbackRate: 20,
-      margin: -2.8,
-      profitIfAWins: 12.3,
-      profitIfBWins: 14.1,
-      optimalBetB: 158
-    }
-  ]
+  // Remove mock data as we're now using real data from the store
 
-  const mockBrokerHistory = [
-    {
-      id: 1,
-      date: '2024-01-15',
-      action: 'Account Created',
-      brokerName: 'Bet365',
-      accountType: 'Premium',
-      amount: 0,
-      balance: 5000,
-      leverage: 100
-    },
-    {
-      id: 2,
-      date: '2024-01-14',
-      action: 'Deposit',
-      brokerName: 'William Hill',
-      accountType: 'Standard',
-      amount: 1000,
-      balance: 6000,
-      leverage: 50
+  const handleExport = (type) => {
+    let dataToExport = []
+    let filename = ''
+    
+    switch (type) {
+      case 'single':
+        dataToExport = singleHistory
+        filename = 'single_calculator_history'
+        break
+      case 'pro':
+        dataToExport = proHistory
+        filename = 'pro_calculator_history'
+        break
+      case 'broker':
+        dataToExport = brokerHistory
+        filename = 'broker_transaction_history'
+        break
+      default:
+        return
     }
-  ]
+    
+    if (dataToExport.length === 0) {
+      alert(`No ${type} calculator data to export`)
+      return
+    }
+    
+    exportCalculatorHistory(dataToExport, filename)
+  }
 
-  useEffect(() => {
-    // Load history data from API
-    setSingleHistory(mockSingleHistory)
-    setProHistory(mockProHistory)
-    setBrokerHistory(mockBrokerHistory)
-  }, [])
+  const handleDelete = (id, type) => {
+    if (window.confirm('Are you sure you want to delete this entry? This action cannot be undone.')) {
+      switch (type) {
+        case 'single':
+          deleteSingleBet(id)
+          break
+        case 'pro':
+          deleteProBet(id)
+          break
+        case 'broker':
+          deleteBrokerTransaction(id)
+          break
+      }
+    }
+  }
 
   const handleExportHistory = (type) => {
     const historyData = type === 'single' ? singleHistory : 
