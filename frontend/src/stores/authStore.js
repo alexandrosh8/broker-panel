@@ -67,6 +67,9 @@ export const useAuthStore = create(
             isAuthenticated: true,
           })
           
+          // Connect to real-time service
+          realtimeService.connect(response.data.user.id)
+          
           return true
         } catch (error) {
           get().logout()
