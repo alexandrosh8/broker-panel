@@ -159,8 +159,8 @@ async def register(user: UserCreate):
     user_dict.pop("password")
     user_dict["hashed_password"] = hashed_password
     
-    new_user = User(**user_dict)
-    await db.users.insert_one(new_user.dict())
+    new_user = User(**{k: v for k, v in user_dict.items() if k != "hashed_password"})
+    await db.users.insert_one(user_dict)  # Insert the full dict with hashed_password
     
     return new_user
 
