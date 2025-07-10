@@ -149,52 +149,75 @@ export default function Activities() {
 
   const renderProHistory = () => (
     <div className="space-y-4">
-      {proHistory.map((item) => (
-        <Card key={item.id}>
+      {proHistory.length === 0 ? (
+        <Card>
           <CardBody>
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  Dual Account Arbitrage
-                </h3>
-                <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h4 className="text-sm font-medium text-primary-600 dark:text-primary-400">Account A</h4>
-                    <p className="text-sm">Odds: {item.accountA.odds} • Bet: {formatCurrency(item.accountA.bet)}</p>
-                  </div>
-                  <div>
-                    <h4 className="text-sm font-medium text-secondary-600 dark:text-secondary-400">Account B</h4>
-                    <p className="text-sm">Odds: {item.accountB.odds} • Bet: {formatCurrency(item.optimalBetB)}</p>
-                  </div>
-                </div>
-                <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <span className="text-neutral-500">Margin:</span>
-                    <span className="font-medium ml-1">{formatPercentage(item.margin)}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">If A Wins:</span>
-                    <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.profitIfAWins)}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">If B Wins:</span>
-                    <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.profitIfBWins)}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">Cashback:</span>
-                    <span className="font-medium ml-1">{formatPercentage(item.cashbackRate)}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {formatDate(item.date)}
-                </p>
-              </div>
+            <div className="text-center py-8">
+              <p className="text-neutral-500">No pro calculator history yet.</p>
+              <p className="text-sm text-neutral-400 mt-2">
+                Start using the Pro Calculator to see your dual account arbitrage history here.
+              </p>
             </div>
           </CardBody>
         </Card>
-      ))}
+      ) : (
+        proHistory.map((item) => (
+          <Card key={item.id}>
+            <CardBody>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
+                      Dual Account Arbitrage
+                    </h3>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(item.id, 'pro')}
+                      className="ml-2"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                  <div className="mt-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <h4 className="text-sm font-medium text-primary-600 dark:text-primary-400">Account A</h4>
+                      <p className="text-sm">Odds: {item.accountA?.odds || 'N/A'} • Bet: {formatCurrency(item.accountA?.bet || 0)}</p>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-medium text-secondary-600 dark:text-secondary-400">Account B</h4>
+                      <p className="text-sm">Odds: {item.accountB?.odds || 'N/A'} • Bet: {formatCurrency(item.optimalBetB || 0)}</p>
+                    </div>
+                  </div>
+                  <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-neutral-500">Margin:</span>
+                      <span className="font-medium ml-1">{formatPercentage(item.margin)}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">If A Wins:</span>
+                      <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.profitIfAWins)}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">If B Wins:</span>
+                      <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.profitIfBWins)}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Cashback:</span>
+                      <span className="font-medium ml-1">{formatPercentage(item.cashbackRate)}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    {formatDate(item.date || item.timestamp)}
+                  </p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        ))
+      )}
     </div>
   )
 
