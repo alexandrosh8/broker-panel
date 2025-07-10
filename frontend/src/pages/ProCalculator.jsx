@@ -24,6 +24,13 @@ export default function ProCalculator() {
   const [totalBLosses, setTotalBLosses] = useState(0) // Track cumulative B losses
   const [bettingHistory, setBettingHistory] = useState([]) // Store betting history
 
+  // Calculate current cashback tier based on total B losses
+  const getCurrentCashbackTier = () => {
+    return CASHBACK_TIERS.find(tier => totalBLosses >= tier.threshold) || CASHBACK_TIERS[CASHBACK_TIERS.length - 1]
+  }
+
+  const currentTier = getCurrentCashbackTier()
+
   const handleAccountChange = (account, field, value) => {
     setAccountData(prev => ({
       ...prev,
@@ -35,17 +42,25 @@ export default function ProCalculator() {
     const oddsA = parseFloat(accountData.A.odds) || 0
     const oddsB = parseFloat(accountData.B.odds) || 0
     const commissionRate = parseFloat(commission) || 0
-    const cashback = parseFloat(cashbackRate) || 0
     const betA = parseFloat(accountData.A.bet) || 0
+    const cashbackRate = currentTier.rate / 100 // Convert to decimal
 
     // Calculate margin
     const margin = oddsA > 0 && oddsB > 0 ? ((1/oddsA + 1/oddsB - 1) * 100) : 0
 
-    // Calculate optimal bet B based on arbitrage formula
-    const optimalBetB = (betA * oddsA) / oddsB
+    // Calculate optimal bet B using the original formula: betA * oddsA / (oddsB - cashbackRate)
+    const denominator = oddsB - cashbackRate
+    const optimalBetB = denominator > 0 ? (betA * oddsA) / denominator : 0
 
-    // Calculate profits considering cashback when account B loses
-    const profitIfAWins = (betA * (oddsA - 1) * (1 - commissionRate/100)) - optimalBetB + (optimalBetB * cashback/100)
+    // Calculate profits with proper cashback consideration
+    // If A wins: A gets winnings minus commission, B loses stake but gets cashback
+    const grossWinningsA = betA * (oddsA - 1)
+    const commissionAmount = grossWinningsA * (commissionRate / 100)
+    const netWinningsA = grossWinningsA - commissionAmount
+    const cashbackAmountIfAWins = optimalBetB * cashbackRate
+    const profitIfAWins = netWinningsA - optimalBetB + cashbackAmountIfAWins
+
+    // If B wins: B gets winnings, A loses stake
     const profitIfBWins = (optimalBetB * (oddsB - 1)) - betA
 
     return {
@@ -53,6 +68,8 @@ export default function ProCalculator() {
       optimalBetB,
       profitIfAWins,
       profitIfBWins,
+      cashbackRate: currentTier.rate,
+      cashbackTier: currentTier
     }
   }
 
