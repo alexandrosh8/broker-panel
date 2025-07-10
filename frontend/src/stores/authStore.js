@@ -49,6 +49,9 @@ export const useAuthStore = create(
         
         // Clear token from headers
         delete api.defaults.headers.common['Authorization']
+        
+        // Disconnect from real-time service
+        realtimeService.disconnect()
       },
       
       checkAuth: async () => {
