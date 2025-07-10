@@ -235,7 +235,7 @@ export default function Analytics() {
         <Card>
           <CardBody className="flex items-center space-x-4">
             <div className="p-3 bg-primary-100 dark:bg-primary-900 rounded-lg">
-              <DollarSignIcon className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+              <CurrencyDollarIcon className="h-8 w-8 text-primary-600 dark:text-primary-400" />
             </div>
             <div>
               <p className="text-sm text-neutral-600 dark:text-neutral-400">Total Profit</p>
