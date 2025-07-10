@@ -200,9 +200,19 @@ export default function SingleCalculator() {
                 placeholder="e.g., Match Winner"
               />
 
-              <Button type="submit" className="w-full">
-                Log Bet
-              </Button>
+              <div className="flex gap-2">
+                <Button type="submit" className="flex-1">
+                  Log Bet
+                </Button>
+                <Button type="button" variant="outline" onClick={handleExportPDF}>
+                  <DocumentArrowDownIcon className="h-4 w-4 mr-2" />
+                  PDF
+                </Button>
+                <Button type="button" variant="outline" onClick={handleExportExcel}>
+                  <TableCellsIcon className="h-4 w-4 mr-2" />
+                  Excel
+                </Button>
+              </div>
             </form>
           </CardBody>
         </Card>
