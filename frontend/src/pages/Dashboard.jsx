@@ -83,6 +83,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState(mockStats)
   const [recentActivity, setRecentActivity] = useState(mockRecentActivity)
   const [isLoading, setIsLoading] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
     // Load dashboard data
