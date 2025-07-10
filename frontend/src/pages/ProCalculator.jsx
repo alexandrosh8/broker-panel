@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DocumentArrowDownIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import { Card, CardHeader, CardBody, CardTitle } from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import { formatCurrency, formatPercentage } from '../utils/format'
 import { exportToPDF, exportToExcel } from '../utils/export'
+
+// Cashback tiers from original HTML
+const CASHBACK_TIERS = [
+  { threshold: 7000, rate: 40, label: "40% (7K+ Loss)" },
+  { threshold: 6000, rate: 35, label: "35% (6-7K Loss)" },
+  { threshold: 5000, rate: 30, label: "30% (5-6K Loss)" },
+  { threshold: 0, rate: 25, label: "25% (0-5K Loss)" }
+]
 
 export default function ProCalculator() {
   const [accountData, setAccountData] = useState({
@@ -13,7 +21,8 @@ export default function ProCalculator() {
   })
   
   const [commission, setCommission] = useState('0')
-  const [cashbackRate, setCashbackRate] = useState('25')
+  const [totalBLosses, setTotalBLosses] = useState(0) // Track cumulative B losses
+  const [bettingHistory, setBettingHistory] = useState([]) // Store betting history
 
   const handleAccountChange = (account, field, value) => {
     setAccountData(prev => ({
