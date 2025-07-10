@@ -78,45 +78,72 @@ export default function Activities() {
 
   const renderSingleHistory = () => (
     <div className="space-y-4">
-      {singleHistory.map((item) => (
-        <Card key={item.id}>
+      {singleHistory.length === 0 ? (
+        <Card>
           <CardBody>
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
-                  {item.game}
-                </h3>
-                <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                  {item.sport} • {item.market} • {item.bookie}
-                </p>
-                <div className="mt-2 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <span className="text-neutral-500">Odds:</span>
-                    <span className="font-medium ml-1">{item.odds}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">Bet:</span>
-                    <span className="font-medium ml-1">{formatCurrency(item.betAmount)}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">Profit:</span>
-                    <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.netProfit)}</span>
-                  </div>
-                  <div>
-                    <span className="text-neutral-500">ROI:</span>
-                    <span className="font-medium ml-1">{formatPercentage(item.roi)}</span>
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <p className="text-sm text-neutral-500 dark:text-neutral-400">
-                  {formatDate(item.date)}
-                </p>
-              </div>
+            <div className="text-center py-8">
+              <p className="text-neutral-500">No single calculator history yet.</p>
+              <p className="text-sm text-neutral-400 mt-2">
+                Start using the Single Calculator to see your betting history here.
+              </p>
             </div>
           </CardBody>
         </Card>
-      ))}
+      ) : (
+        singleHistory.map((item) => (
+          <Card key={item.id}>
+            <CardBody>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <div className="flex justify-between items-start mb-3">
+                    <h3 className="font-semibold text-neutral-900 dark:text-neutral-100">
+                      {item.game || 'Single Bet'}
+                    </h3>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDelete(item.id, 'single')}
+                      className="ml-2"
+                    >
+                      Delete
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                    <div>
+                      <span className="text-neutral-500">Odds:</span>
+                      <span className="font-medium ml-1">{item.odds}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Bet:</span>
+                      <span className="font-medium ml-1">{formatCurrency(item.betAmount)}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">Profit:</span>
+                      <span className="font-medium ml-1 text-secondary-600">{formatCurrency(item.netProfit)}</span>
+                    </div>
+                    <div>
+                      <span className="text-neutral-500">ROI:</span>
+                      <span className="font-medium ml-1">{formatPercentage(item.roi)}</span>
+                    </div>
+                  </div>
+                  {(item.bookie || item.sport || item.market) && (
+                    <div className="mt-2 text-sm text-neutral-600 dark:text-neutral-400">
+                      {item.bookie && <span>Bookie: {item.bookie}</span>}
+                      {item.sport && <span className="ml-4">Sport: {item.sport}</span>}
+                      {item.market && <span className="ml-4">Market: {item.market}</span>}
+                    </div>
+                  )}
+                </div>
+                <div className="text-right">
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                    {formatDate(item.date || item.timestamp)}
+                  </p>
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        ))
+      )}
     </div>
   )
 
