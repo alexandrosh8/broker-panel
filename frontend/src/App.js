@@ -25,6 +25,7 @@ function App() {
             <Route path="/single" element={<SingleCalculator />} />
             <Route path="/pro" element={<ProCalculator />} />
             <Route path="/broker" element={<BrokerAccounts />} />
+            <Route path="/activities" element={<Activities />} />
             <Route path="/settings" element={<Settings />} />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
