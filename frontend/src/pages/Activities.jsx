@@ -5,12 +5,23 @@ import { Card, CardHeader, CardBody, CardTitle } from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import { formatCurrency, formatPercentage, formatDate } from '../utils/format'
 import { exportCalculatorHistory } from '../utils/export'
+import { useCalculatorStore } from '../stores/calculatorStore'
 
 export default function Activities() {
   const [activeTab, setActiveTab] = useState('single')
-  const [singleHistory, setSingleHistory] = useState([])
-  const [proHistory, setProHistory] = useState([])
-  const [brokerHistory, setBrokerHistory] = useState([])
+  
+  // Get data from the calculator store
+  const { 
+    singleHistory, 
+    proHistory, 
+    brokerHistory,
+    getStats,
+    deleteSingleBet,
+    deleteProBet,
+    deleteBrokerTransaction 
+  } = useCalculatorStore()
+  
+  const stats = getStats()
 
   // Mock data - replace with real API calls
   const mockSingleHistory = [
