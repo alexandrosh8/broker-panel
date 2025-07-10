@@ -45,6 +45,36 @@ export default function ProCalculator() {
 
   const results = calculateOptimal()
 
+  const handleExportPDF = () => {
+    const exportData = {
+      type: 'pro',
+      accountA: accountData.A,
+      accountB: accountData.B,
+      commission,
+      cashbackRate,
+      optimalBetB: results.optimalBetB,
+      margin: results.margin,
+      profitIfAWins: results.profitIfAWins,
+      profitIfBWins: results.profitIfBWins,
+    }
+    exportToPDF(exportData, 'Pro Calculator Results')
+  }
+
+  const handleExportExcel = () => {
+    const exportData = {
+      type: 'pro',
+      accountA: accountData.A,
+      accountB: accountData.B,
+      commission,
+      cashbackRate,
+      optimalBetB: results.optimalBetB,
+      margin: results.margin,
+      profitIfAWins: results.profitIfAWins,
+      profitIfBWins: results.profitIfBWins,
+    }
+    exportToExcel(exportData, 'Pro Calculator Results')
+  }
+
   return (
     <div className="space-y-8">
       <div>
