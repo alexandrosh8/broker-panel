@@ -1,53 +1,93 @@
-import React, { useState } from 'react'
-import { PlusIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
+import React, { useState, useEffect } from 'react'
+import { 
+  PlusIcon, 
+  PencilIcon, 
+  TrashIcon, 
+  DocumentArrowDownIcon,
+  DocumentArrowUpIcon,
+  EyeIcon,
+  EyeSlashIcon
+} from '@heroicons/react/24/outline'
 import { Card, CardHeader, CardBody, CardTitle } from '../components/ui/Card'
 import Button from '../components/ui/Button'
+import Input from '../components/ui/Input'
+import { useAppStore } from '../stores/appStore'
 
-const mockAccounts = [
-  {
-    id: 1,
-    brokerName: 'Bet365',
-    accountType: 'MT5',
-    leverage: '500',
-    user: 'Alexis',
-    email: 'alexis@example.com',
-    isActive: true,
-    balance: 5420.50,
-  },
-  {
-    id: 2,
-    brokerName: 'William Hill',
-    accountType: 'MT4',
-    leverage: '200',
-    user: 'Leo',
-    email: 'leo@example.com',
-    isActive: true,
-    balance: 3280.75,
-  },
-  {
-    id: 3,
-    brokerName: 'Betfair',
-    accountType: 'MT5',
-    leverage: '1000',
-    user: 'Stephie',
-    email: 'stephie@example.com',
-    isActive: false,
-    balance: 0,
-  },
-]
+// Presets from original HTML
+const PRESETS = {
+  users: ['Soti', 'Leo', 'Alexis', 'Stephie', 'Panayiotis', 'Tania', 'Maou', 'Andreas'],
+  emails: ['nsotiroulla@gmail.com', 'titas1812@gmail.com', 'halexandros25@gmail.com', 'isaak.leonidas@gmail.com'],
+  leverage: ['30', '200', '400', '500', '1000'],
+  accountTypes: ['MT5', 'MT4'],
+  brokerNames: ['Bossa FX', 'Baazex', 'Juno'],
+  wallets: ['Revo', 'Wise', 'Crypto', 'Boc'],
+  floatAccounts: ['ByBit', 'Leo Revo', 'SOTI SKRILL', 'SOTI REVO', 'SOTI HSBC', 'Alexis Wise', 'Stephie Revo'],
+  costUsers: ['Alexis', 'Leo'],
+  paymentTypes: ['What I pay', 'What I received']
+}
 
-const mockCosts = [
-  {
-    id: 1,
-    date: '2024-01-15',
-    type: 'What I pay',
-    user: 'Alexis',
-    amount: 250,
-    description: 'Broker commission fee',
-  },
-  {
-    id: 2,
-    date: '2024-01-14',
+// Initial float account owners
+const INITIAL_FLOAT_OWNERS = {
+  'ByBit': 'Alexis',
+  'Leo Revo': 'Leo', 
+  'SOTI SKRILL': 'Alexis',
+  'SOTI REVO': 'Alexis',
+  'SOTI HSBC': 'Alexis',
+  'Alexis Wise': 'Alexis',
+  'Stephie Revo': 'Leo'
+}
+
+export default function BrokerAccounts() {
+  const [activeTab, setActiveTab] = useState('accounts')
+  const [accounts, setAccounts] = useState([])
+  const [costs, setCosts] = useState([])
+  const [proxies, setProxies] = useState([])
+  const [floatAccounts, setFloatAccounts] = useState(Object.keys(INITIAL_FLOAT_OWNERS))
+  const [floatBalances, setFloatBalances] = useState({})
+  const [floatOwners, setFloatOwners] = useState(INITIAL_FLOAT_OWNERS)
+  
+  // Modal states
+  const [showAccountModal, setShowAccountModal] = useState(false)
+  const [showCostModal, setShowCostModal] = useState(false)
+  const [showProxyModal, setShowProxyModal] = useState(false)
+  const [editingItem, setEditingItem] = useState(null)
+  
+  // Filters
+  const [accountFilter, setAccountFilter] = useState({ status: 'all', search: '' })
+  const [costFilter, setCostFilter] = useState({ user: '', type: '', search: '' })
+  
+  const { addNotification } = useAppStore()
+
+  // Load data from localStorage on component mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('brokerAccountsData_v3')
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData)
+        setAccounts(data.accounts || [])
+        setCosts(data.costs || [])
+        setProxies(data.proxies || [])
+        setFloatAccounts(data.floatAccounts || Object.keys(INITIAL_FLOAT_OWNERS))
+        setFloatBalances(data.floatBalances || {})
+        setFloatOwners(data.floatOwners || INITIAL_FLOAT_OWNERS)
+      } catch (error) {
+        console.error('Error loading broker data:', error)
+      }
+    }
+  }, [])
+
+  // Save data to localStorage whenever state changes
+  useEffect(() => {
+    const dataToSave = {
+      accounts,
+      costs,
+      proxies,
+      floatAccounts,
+      floatBalances,
+      floatOwners
+    }
+    localStorage.setItem('brokerAccountsData_v3', JSON.stringify(dataToSave))
+  }, [accounts, costs, proxies, floatAccounts, floatBalances, floatOwners])
     type: 'What I received',
     user: 'Leo',
     amount: 180,
