@@ -272,8 +272,18 @@ export default function ProCalculator() {
               Optimal Bet B = Bet A × (Odds A ÷ (Odds B - Cashback Rate))
             </p>
             <p className="text-neutral-500 dark:text-neutral-400 mt-2">
-              Current: {accountData.A.bet} × ({accountData.A.odds} ÷ ({accountData.B.odds} - {parseFloat(cashbackRate)/100})) = {formatCurrency(results.optimalBetB)}
+              Current: {accountData.A.bet} × ({accountData.A.odds} ÷ ({accountData.B.odds} - {results.cashbackRate/100})) = {formatCurrency(results.optimalBetB)}
             </p>
+            <div className="mt-3 pt-3 border-t border-neutral-300 dark:border-neutral-600">
+              <p className="text-neutral-600 dark:text-neutral-400 text-xs mb-2">Available Cashback Tiers:</p>
+              <div className="space-y-1">
+                {CASHBACK_TIERS.map((tier, index) => (
+                  <div key={index} className={`text-xs ${currentTier.rate === tier.rate ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-neutral-500 dark:text-neutral-400'}`}>
+                    {tier.label}
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </CardBody>
       </Card>
