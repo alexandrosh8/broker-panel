@@ -1,0 +1,30 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="192" height="192" fill="#3b82f6" rx="24"/>
+  
+  <!-- Calculator Icon -->
+  <rect x="48" y="48" width="96" height="96" fill="white" rx="8"/>
+  
+  <!-- Screen -->
+  <rect x="56" y="56" width="80" height="20" fill="#1e293b" rx="4"/>
+  
+  <!-- Buttons -->
+  <rect x="60" y="84" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="80" y="84" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="100" y="84" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="120" y="84" width="16" height="12" fill="#fbbf24" rx="2"/>
+  
+  <rect x="60" y="100" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="80" y="100" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="100" y="100" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="120" y="100" width="16" height="12" fill="#fbbf24" rx="2"/>
+  
+  <rect x="60" y="116" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="80" y="116" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="100" y="116" width="16" height="12" fill="#e2e8f0" rx="2"/>
+  <rect x="120" y="116" width="16" height="12" fill="#10b981" rx="2"/>
+  
+  <!-- Sports element (small circle representing a ball) -->
+  <circle cx="32" cy="32" r="8" fill="white" opacity="0.8"/>
+  <circle cx="160" cy="160" r="8" fill="white" opacity="0.8"/>
+</svg>
