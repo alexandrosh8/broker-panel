@@ -1,9 +1,11 @@
 import React, { useState } from 'react'
+import { DocumentArrowDownIcon, TableCellsIcon } from '@heroicons/react/24/outline'
 import { Card, CardHeader, CardBody, CardTitle } from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Input from '../components/ui/Input'
 import Select from '../components/ui/Select'
 import { formatCurrency, formatPercentage } from '../utils/format'
+import { exportToPDF, exportToExcel } from '../utils/export'
 
 export default function SingleCalculator() {
   const [formData, setFormData] = useState({
