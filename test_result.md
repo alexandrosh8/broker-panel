@@ -214,9 +214,8 @@ metadata:
 
 test_plan:
   current_focus:
-    - "Authentication System Setup"
-    - "Database Configuration"
-    - "Calculator Data Models"
+    - "Authentication Flow"
+    - "Calculator Components"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
