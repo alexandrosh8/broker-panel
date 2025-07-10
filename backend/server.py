@@ -335,11 +335,17 @@ async def save_broker_account(account: BrokerAccount, current_user: User = Depen
         await db.broker_accounts.insert_one(account.dict())
     
     # Send real-time update
+    account_dict = account.dict()
+    # Convert datetime objects to ISO format strings for JSON serialization
+    for key, value in account_dict.items():
+        if isinstance(value, datetime):
+            account_dict[key] = value.isoformat()
+    
     await manager.broadcast_to_user({
         "type": "data_update",
         "calculator": "broker",
         "action": "save",
-        "data": account.dict(),
+        "data": account_dict,
         "timestamp": datetime.utcnow().isoformat()
     }, current_user.id)
     
