@@ -253,7 +253,11 @@ export default function Dashboard() {
               ))}
             </div>
             <div className="mt-6">
-              <Button variant="ghost" className="w-full">
+              <Button 
+                variant="ghost" 
+                className="w-full"
+                onClick={() => window.location.href = '/activities'}
+              >
                 View All Activity
               </Button>
             </div>
