@@ -257,7 +257,7 @@ export default function Dashboard() {
               <Button 
                 variant="ghost" 
                 className="w-full"
-                onClick={() => window.location.href = '/activities'}
+                onClick={() => navigate('/activities')}
               >
                 View All Activity
               </Button>
