@@ -34,6 +34,43 @@ JWT_SECRET = os.environ.get('JWT_SECRET', 'your-super-secret-jwt-key-change-in-p
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRES_IN = os.environ.get('JWT_EXPIRES_IN', '7d')
 
+# WebSocket Connection Manager
+class ConnectionManager:
+    def __init__(self):
+        self.active_connections: Dict[str, List[WebSocket]] = {}
+        
+    async def connect(self, websocket: WebSocket, user_id: str):
+        await websocket.accept()
+        if user_id not in self.active_connections:
+            self.active_connections[user_id] = []
+        self.active_connections[user_id].append(websocket)
+        
+    def disconnect(self, websocket: WebSocket, user_id: str):
+        if user_id in self.active_connections:
+            self.active_connections[user_id].remove(websocket)
+            if not self.active_connections[user_id]:
+                del self.active_connections[user_id]
+                
+    async def send_personal_message(self, message: str, user_id: str):
+        if user_id in self.active_connections:
+            for connection in self.active_connections[user_id]:
+                try:
+                    await connection.send_text(message)
+                except:
+                    # Connection closed, remove it
+                    await self.disconnect(connection, user_id)
+                    
+    async def broadcast_to_user(self, data: dict, user_id: str):
+        message = json.dumps(data)
+        await self.send_personal_message(message, user_id)
+
+manager = ConnectionManager()
+
+# JWT Configuration
+JWT_SECRET = os.environ.get('JWT_SECRET', 'your-super-secret-jwt-key-change-in-production')
+JWT_ALGORITHM = "HS256"
+JWT_EXPIRES_IN = os.environ.get('JWT_EXPIRES_IN', '7d')
+
 # Create the main app
 app = FastAPI(title="Sports Betting Calculator API", version="1.0.0")
 
