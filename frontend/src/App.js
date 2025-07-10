@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard'
 import SingleCalculator from './pages/SingleCalculator'
 import ProCalculator from './pages/ProCalculator'
 import BrokerAccounts from './pages/BrokerAccounts'
+import Activities from './pages/Activities'
 import Settings from './pages/Settings'
 import { cn } from './utils/cn'
 
